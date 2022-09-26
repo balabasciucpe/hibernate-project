@@ -11,11 +11,12 @@ public class NoPromotionForYouThisTimeMUHAHA implements PromotionSeason {
     }
 
     @Override
-    public double applySeasonPromotionDiscount(double initialPrice) {
+    public double applySeasonPromotionDiscount(double initialPrice, double procentage) {
         this.isSeason();
         System.out.println("You still have to pay: " + initialPrice);
         return initialPrice;
     }
+
 
     public NoPromotionForYouThisTimeMUHAHA() {}
 }

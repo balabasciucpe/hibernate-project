@@ -1,4 +1,4 @@
-package com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.PromotionUtility;
+package com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.PromotionUtility;
 
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;

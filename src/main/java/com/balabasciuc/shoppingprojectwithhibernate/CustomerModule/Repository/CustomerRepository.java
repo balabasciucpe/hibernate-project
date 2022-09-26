@@ -17,5 +17,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     //long, i know...
     @Query(value = "SELECT customer FROM Customer customer WHERE customer.customerAddress.customerDetails.customerName = :customerName")
-    Customer getCustomerByName(@Param("customerName") String customerName);
+    Customer findCustomerByName(@Param("customerName") String customerName);
+
+    Customer findCustomerByCustomerAddress_CustomerDetails_CustomerName(String customerName);
 }

@@ -7,14 +7,11 @@ import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.Addres
 import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.Customer;
 import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.CustomerDetails;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Description;
-import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.EuropePrice;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Repository.ProductRepository;
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Promotion;
-import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.PromotionChristmasSeason;
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.PromotionEasterSeason;
-import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.PromotionSeason;
-import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Repository.PromotionRepository;
+import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Repository.PromotionRepository;
 import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.Location;
 import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.Store;
 import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.ZipCode;
@@ -27,7 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,8 +109,7 @@ public class StoreTest {
       //  product2.setPromotion(promotionModule);
       //  product2.setCustomerProducts(customer);
 
-        EuropePrice eur = new EuropePrice(new BigDecimal("20"), "EUR");
-        eur.setProductPrice(product2);
+
 
         List<Product> productList = new ArrayList<>();
         productList.add(product2);

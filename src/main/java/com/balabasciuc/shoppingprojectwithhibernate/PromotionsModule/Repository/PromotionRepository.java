@@ -1,4 +1,4 @@
-package com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Repository;
+package com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Repository;
 
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Promotion;
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.PromotionSeason;

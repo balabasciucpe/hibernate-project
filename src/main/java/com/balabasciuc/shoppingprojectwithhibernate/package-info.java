@@ -34,4 +34,13 @@
                 }
 )
 
+@org.hibernate.annotations.GenericGenerator(
+        name = "CUSTOMER_ID_GENERATOR", strategy = "enhanced-sequence",
+        parameters =
+                {
+                        @org.hibernate.annotations.Parameter(name = "sequence_name", value = "HIBERNATE_CUSTOMER_ID"),
+                        @org.hibernate.annotations.Parameter(name = "initial_value", value = "1")
+                }
+)
+
 package com.balabasciuc.shoppingprojectwithhibernate;

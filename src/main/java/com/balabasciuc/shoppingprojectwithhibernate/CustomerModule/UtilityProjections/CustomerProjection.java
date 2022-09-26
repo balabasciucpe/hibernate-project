@@ -2,6 +2,7 @@ package com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.UtilityProje
 
 import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.Address;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
+import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Utility.ProductProjection;
 import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.Store;
 
 import java.util.ArrayList;
@@ -14,8 +15,6 @@ public class CustomerProjection {
         private Address customerAddress;
 
         private long amountToSpend;
-
-        public CustomerDTO() {}
 
         public CustomerDTO(Address customerAddress, long amountToSpend) {
             this.customerAddress = customerAddress;
@@ -34,7 +33,7 @@ public class CustomerProjection {
     public static class CustomerFat
     {
         private Address customerAddress;
-        private Store customerStore;
+
         private final Collection<Product> productCollection = new ArrayList<>();
 
         public CustomerFat(Address customerAddress) {
@@ -45,11 +44,27 @@ public class CustomerProjection {
             return customerAddress;
         }
 
-        public Store getCustomerStore() {
-            return customerStore;
+        public Collection<Product> getProductCollection() {
+            return productCollection;
+        }
+    }
+
+    public static class CustomerSkinny
+    {
+
+        private long amountToSpend;
+        private Collection<ProductProjection.ProductDTO> productCollection = new ArrayList<>();
+
+        public CustomerSkinny(long amountToSpend, Collection<ProductProjection.ProductDTO> productCollection) {
+            this.amountToSpend = amountToSpend;
+            this.productCollection = productCollection;
         }
 
-        public Collection<Product> getProductCollection() {
+        public long getAmountToSpend() {
+            return amountToSpend;
+        }
+
+        public Collection<ProductProjection.ProductDTO> getProductCollection() {
             return productCollection;
         }
     }

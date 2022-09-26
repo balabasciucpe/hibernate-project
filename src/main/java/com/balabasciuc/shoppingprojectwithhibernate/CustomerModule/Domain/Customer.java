@@ -5,6 +5,7 @@ import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.Store;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
@@ -27,18 +28,30 @@ public class Customer {
             @AttributeOverride(name = "addressEmail", column = @Column(name = "CUSTOMER_EMAIL")),
     @AttributeOverride(name = "customerDetails.customerName", column = @Column(name = "CUSTOMER_NAME")),
     @AttributeOverride(name = "customerDetails.customerPrename", column = @Column(name = "CUSTOMER_PRENAME"))})
+    @Valid
     private Address customerAddress;
+
+
+    @Embedded @Column(nullable = false)
+    @Valid
+    private PurchasedDetails purchasedDetails;
 
 
     //uni
     //bidirectional because we want to see which products these customers have
     //or of what consumer these products are
     @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
+ //   @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "CUSTOMER_PRODUCT_ID")
     @NotNull // not nullable constraint in DDL
     private Collection<Product> productCollection = new ArrayList<>();
 
+
+    //One Customer to a Store in the same time
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "CUSTOMER_STORE_ID")
+    private Store store;
 
     @PositiveOrZero
     @Column(name = "CUSTOMER_MONEY")
@@ -46,7 +59,7 @@ public class Customer {
 
     protected Customer() {}
 
-    public Customer(Address customerAddress, @PositiveOrZero long amountToSpend) {
+    public Customer(Address customerAddress, long amountToSpend) {
         this.customerAddress = customerAddress;
         this.amountToSpend = amountToSpend;
     }
@@ -85,8 +98,19 @@ public class Customer {
         this.amountToSpend = amountToSpend;
     }
 
-    public void addStore(Store customerStore)
-    {
-        customerStore.getCustomerCollection().add(this);
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public PurchasedDetails getPurchasedDetails() {
+        return purchasedDetails;
+    }
+
+    public void setPurchasedDetails(PurchasedDetails purchasedDetails) {
+        this.purchasedDetails = purchasedDetails;
     }
 }

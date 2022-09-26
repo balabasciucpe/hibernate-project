@@ -1,27 +1,29 @@
 package com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain;
 
-import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.Customer;
-import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Promotion;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 @Entity
 @org.hibernate.annotations.DynamicUpdate
 @org.hibernate.annotations.DynamicInsert
 @Access(AccessType.FIELD)
-public class Product {
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class    Product {
+
+
+
 
     @Id
-    @GeneratedValue(generator = "PRODUCT_GENERATOR_ID")
+    @SequenceGenerator(name = "product_generator", sequenceName = "PRODUCT_GENERATOR_ID")
+    @GeneratedValue(generator = "product_generator")
     @Column(name = "PRODUCT_ID")
     private Long productId;
 
@@ -36,7 +38,7 @@ public class Product {
     @Embedded
     @AttributeOverrides({@AttributeOverride(name = "descriptionName", column = @Column(name = "PRODUCT_NAME", nullable = false)),
     @AttributeOverride(name = "descriptionAbout", column = @Column(name = "PRODUCT_DESCRIPTION", nullable = false))})
-    @NotNull
+    @Valid
     private Description productDescription;
 
     @Enumerated(EnumType.STRING)
@@ -52,10 +54,6 @@ public class Product {
     @Column(name = "PRODUCED_AT_")
     private Date productProducedAtDate;
 
-    @OneToMany(mappedBy = "productPrice", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST) //bidirectional, One Product can have MANY Prices...
-    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
-    private Collection<Price> priceCollection = new ArrayList<>();
 
 
  /*   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -75,7 +73,7 @@ public class Product {
     private Promotion promotion;
 */
 
-    protected Product() {}
+    public Product() {}
 
     public Product(Description productDescription, double productPrice, int productQuantity) {
         this.productDescription = productDescription;
@@ -119,13 +117,7 @@ public class Product {
         this.productProducedAtDate = productProducedAtDate;
     }
 
-    public Collection<Price> getPriceCollection() {
-        return priceCollection;
-    }
 
-    public void setPriceCollection(Collection<Price> priceCollection) {
-        this.priceCollection = priceCollection;
-    }
 
     //recursive relationship -> out of flow error
  /*   public Category getProductCategory() {

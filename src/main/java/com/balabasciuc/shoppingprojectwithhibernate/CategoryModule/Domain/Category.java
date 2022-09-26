@@ -3,10 +3,10 @@ package com.balabasciuc.shoppingprojectwithhibernate.CategoryModule.Domain;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Description;
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Promotion;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,16 +14,23 @@ import java.util.Collection;
 @org.hibernate.annotations.DynamicInsert
 @org.hibernate.annotations.DynamicUpdate
 @Access(AccessType.FIELD)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Category {
 
     @Id
-    @GeneratedValue(generator = "CATEGORY_GENERATOR_ID")
+    @SequenceGenerator(name = "category_generator", sequenceName = "CATEGORY_GENERATOR_ID")
+    @GeneratedValue(generator = "category_generator")
     @Column(name = "CATEGORY_ID")
     private Long categoryId;
+
+
+    @Version
+    private Long categoryVersion;
 
     @Embedded
     @AttributeOverrides({@AttributeOverride(name = "descriptionName", column = @Column(name = "CATEGORY_NAME", nullable = false)),
             @AttributeOverride(name = "descriptionAbout", column = @Column(name = "CATEGORY_DESCRIPTION", nullable = false))})
+    @Valid
     private Description categoryDescription;
 
     //search category for this product
@@ -43,8 +50,7 @@ public class Category {
     //unidirectional
     //https://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
     //(fetch = FetchType.LAZY)
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    // @NotNull // for runtime validation
+    @OneToOne(fetch = FetchType.EAGER,  orphanRemoval = true)
     @JoinColumn(name = "PROMOTION_ID")
     private Promotion promotion;
 
@@ -86,6 +92,10 @@ public class Category {
 
     public void addProduct(Product product) {
         this.productCollection.add(product);
+    }
 
+
+    public Long getCategoryVersion() {
+        return categoryVersion;
     }
 }

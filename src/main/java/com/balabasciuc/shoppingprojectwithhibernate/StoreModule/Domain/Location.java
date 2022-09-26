@@ -1,24 +1,27 @@
 package com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain;
 
-import com.sun.istack.NotNull;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Location {
 
-    @Column(nullable = false) @NotNull
+    @Column(nullable = false) @NotBlank
     private String locationCity;
-    @Column(nullable = false) @NotNull
+    @Column(nullable = false) @NotBlank
     private String locationCountry;
 
     @Embedded
     @NotNull
     @Column(nullable = false)
     @AttributeOverride(name = "zipCode", column = @Column(name = "LOCATION_ZIP_CODE"))
+    @Valid
     private ZipCode locationZipCode;
 
     protected Location() {}

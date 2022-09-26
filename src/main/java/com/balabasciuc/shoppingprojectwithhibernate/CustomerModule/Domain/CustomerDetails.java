@@ -2,15 +2,18 @@ package com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Embeddable
 public class CustomerDetails {
 
-    @NotNull @Column(nullable = false)
+    @Column(nullable = false)
+    @NotEmpty
+    @Size(min = 5, max = 255, message = "Please provide a valid name!")
     private String customerName;
 
-    @NotNull @Column(nullable = false)
+    @NotEmpty
+    @Column(nullable = false)
     private String customerPrename;
 
     protected CustomerDetails() {}

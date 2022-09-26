@@ -42,6 +42,7 @@ public class CallingFromCategory {
     private ResponseEntity<Promotion> checkPromotion(String promotionType)
     {
         ResponseEntity<Promotion> promotion = restTemplate.getForEntity("http://localhost:8080/promotions/test/"+promotionType.toLowerCase(Locale.ROOT), Promotion.class);
+        System.out.println(promotion.getBody().getPromotionSeason().isSeason());
         Optional<Promotion> promotionOptional = Optional.ofNullable(promotion.getBody());
         if(promotionOptional.isPresent())
         {

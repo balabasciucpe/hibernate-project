@@ -5,11 +5,12 @@ import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Service.Custo
 import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.UtilityProjections.CustomerProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "customers")
+@RequestMapping(value = "/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -34,6 +35,7 @@ public class CustomerController {
         customerService.save(customer);
     }
 
+
     @GetMapping(value = "/getCustomerByName")
     public ResponseEntity<CustomerProjection.CustomerDTO> getCustomerByName(@RequestParam String name)
     {
@@ -50,6 +52,7 @@ public class CustomerController {
                 .body(customerService.getWholeCustomerByName(name));
     }
 
+
     @GetMapping(value = "/getCustomerById")
     public ResponseEntity<CustomerProjection.CustomerFat> getAllKindOfInfos(@RequestParam Long customerId)
     {
@@ -58,11 +61,17 @@ public class CustomerController {
                 .body(customerService.getCustomerById(customerId));
     }
 
-    @GetMapping(value = "/customerInStore/{customerName}/{storeName}")
-    public ResponseEntity<Customer> customerInStore(@PathVariable String customerName, @PathVariable String storeName)
+    @GetMapping(value ="/goIn/{storeName}/{customerName}")
+    public ResponseEntity<Customer> customerInStore(@PathVariable String storeName, @PathVariable String customerName)
     {
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("So we choose this store " + storeName)
-                .body(customerService.customerInStore(customerName, storeName));
+                .body(customerService.customerStore(storeName, customerName));
+    }
+
+    @GetMapping(value = "/buyProducts/{storeName}/{productName}/{customerName}/{numberOfProducts}")
+    public ResponseEntity<CustomerProjection.CustomerSkinny> buyProducts(@PathVariable String storeName, @PathVariable String productName, @PathVariable String customerName, @PathVariable int numberOfProducts)
+    {
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
+                .body(customerService.buyProducts(storeName, productName, customerName, numberOfProducts));
     }
 }

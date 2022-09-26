@@ -12,9 +12,13 @@ public class CustomerCalling {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Store callStore(String storeName)
+    public Store callStore(String storeName) {
+        return restTemplate.getForObject("http://localhost:8080/store/getStoreByName/" + storeName, Store.class);
+    }
+
+    public void saveStore(Store store)
     {
-        return restTemplate.getForObject("http://localhost:8080/store/getStoreByName/"+storeName, Store.class);
+        restTemplate.postForObject("http://localhost:8080/store/create", store, Store.class);
     }
 
     public Product callProductByName(String productName)

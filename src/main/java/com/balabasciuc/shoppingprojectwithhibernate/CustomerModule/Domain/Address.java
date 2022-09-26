@@ -3,22 +3,25 @@ package com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Address {
 
-    @Embedded @NotNull
+    @Embedded
+    @Valid
     private CustomerDetails customerDetails;
 
-    @NotNull @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String addressCity;
 
-    @NotNull @Column(nullable = false)
+    @NotBlank @Column(nullable = false)
     private String addressCountry;
 
-    @NotNull @Column(nullable = false) @Email(message = "Please provide a valide email adress!")
+    @NotBlank @Column(nullable = false) @Email(message = "Please provide a valid email address!")
     private String addressEmail;
 
     protected Address() {}

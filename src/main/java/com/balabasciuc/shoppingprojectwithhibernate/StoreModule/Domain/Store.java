@@ -1,38 +1,48 @@
 package com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain;
 
 import com.balabasciuc.shoppingprojectwithhibernate.CategoryModule.Domain.Category;
-import com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.Domain.Customer;
-import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
 import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain.Promotion;
-import com.sun.istack.NotNull;
+
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
 @org.hibernate.annotations.DynamicInsert
 @org.hibernate.annotations.DynamicUpdate
 @Access(AccessType.FIELD)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Store {
 
     @Id
     @GeneratedValue(generator = "STORE_ID_GENERATOR") //pre insert added values on id
+  //  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_NE")
+   // @SequenceGenerator(name = "STORE_ID_NE", sequenceName = "STORE_ID_NE", allocationSize = 1)
     @Column(name = "STORE_ID", unique = true, updatable = false)
     private Long storeId;
 
-    @Embedded @NotNull @Column(nullable = false)
+
+    @Embedded @NotNull
+    @Column(nullable = false)
     @AttributeOverrides({@AttributeOverride(name = "locationCity", column = @Column(name = "STORE_LOCATION_CITY")),
     @AttributeOverride(name = "locationCountry", column = @Column(name = "STORE_LOCATION_COUNTRY")),
     @AttributeOverride(name = "locationZipCode.zipCode", column = @Column(name = "STORE_LOCATION_ZIPCODE"))})
+    @Valid
     private Location storeLocation;
 
-    @NotNull
+    @NotBlank
     private String storeName;
 
     @Enumerated(EnumType.STRING)
     private StoreType storeType;
 
+
+    /*
     //bidirectional, because we want to see where(in WHICH STORE) a particular customer buy things
    // @OneToMany(mappedBy = "customerStore", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST) //ONE Store to MANY Customers
    // @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
@@ -44,6 +54,11 @@ public class Store {
     @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "CUSTOMER_STORE_ID")
     private Collection<Customer> customerCollection = new ArrayList<>();
+    */
+
+
+
+
 
 
     //unidirectional
@@ -51,26 +66,20 @@ public class Store {
     //...but that means we have a huge graph of objects... Category -> Products, Promotions, Customers...
     //HMMMM
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST)
-    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
+ //   @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "CATEGORY_STORE_ID")
     @NotNull
     private Set<Category> categorySet = new HashSet<>(); // we don't want duplicate categories in our store
 
     //bidirectional because we want to see what promotions stores have
     // ONE overall Promotion for ONE Store...
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "PROMOTION_STORE_ID")
     private Promotion promotion;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //unidirectional
-    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(name = "MANY_STORES_TO_MANY_PRODUCTS_IDS",
-    joinColumns = @JoinColumn(name = "STORE_ID"),
-    inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID"))
-    @NotNull
-    @OrderColumn(name = "PRODUCT_POSITION", nullable = false)
-    private List<Product> productList = new ArrayList<>();
+
+
 
     protected Store() {}
 
@@ -91,14 +100,6 @@ public class Store {
 
     public void setStoreLocation(Location storeLocation) {
         this.storeLocation = storeLocation;
-    }
-
-    public Collection<Customer> getCustomerCollection() {
-        return customerCollection;
-    }
-
-    public void setCustomerCollection(Collection<Customer> customerCollection) {
-        this.customerCollection = customerCollection;
     }
 
     public Set<Category> getCategorySet() {
@@ -134,25 +135,16 @@ public class Store {
         this.storeType = storeType;
     }
 
-    public List<Product> getProductList() {
-        return productList;
-    }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
 
     //https://vladmihalcea.com/jpa-hibernate-synchronize-bidirectional-entity-associations/
     //but we can instead link together with setters objects -> See Tests
-    public void addCustomer(@NotNull Customer customer)
+   /* public void addCustomer(@NotNull Customer customer)
     {
         this.customerCollection.add(customer);
-    }
+    }*/
+    //---> change of mind
 
-    public void deleteCustomer(@NotNull Customer customer)
-    {
-        this.customerCollection.remove(customer);
-    }
 
 
     public void add(@NotNull Category category)
@@ -160,8 +152,5 @@ public class Store {
         this.categorySet.add(category);
     }
 
-    public void addProduct(@NotNull Product product)
-    {
-        this.productList.add(product);
-    }
+
 }

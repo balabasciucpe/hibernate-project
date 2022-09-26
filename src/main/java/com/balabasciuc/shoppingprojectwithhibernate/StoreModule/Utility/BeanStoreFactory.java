@@ -19,7 +19,7 @@ public class BeanStoreFactory {
     {
         //https://stackoverflow.com/questions/21854369/no-suitable-httpmessageconverter-found-for-response-type
         //for json
-        //i guess we gonna migrate to OpenFeign and WebCliend from now on
+        //i guess we gonna migrate to OpenFeign and WebClient from now on
 
         final RestTemplate restTemplate = new RestTemplate();
 

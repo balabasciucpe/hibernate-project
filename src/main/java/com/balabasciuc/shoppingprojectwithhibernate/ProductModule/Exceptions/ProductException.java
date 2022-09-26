@@ -1,8 +1,11 @@
-package com.balabasciuc.shoppingprojectwithhibernate.CustomerModule.UtilityProjections;
+package com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Exceptions;
 
 public class ProductException extends RuntimeException {
 
     public ProductException(String message) {
         super(message);
+    }
+
+    public ProductException() {
     }
 }

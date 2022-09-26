@@ -5,10 +5,16 @@ import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Service.Produc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping(value = "/products")
+@Validated
 public class ProductController {
 
     private final ProductService productService;
@@ -19,19 +25,20 @@ public class ProductController {
     }
 
     @PostMapping(value = "/createProduct")
-    public ResponseEntity<String> create(@RequestBody Product product) {
+    public ResponseEntity<String> create(@Valid @RequestBody Product product) {
         productService.createProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Product " + product + " was created!");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Product " + product.getProductDescription().getDescriptionName() + " was created!");
     }
 
     @GetMapping(value = "/getProduct/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id)
+    //error if id < 5 for the sake of example
+    public ResponseEntity<Product> getProduct(@PathVariable @Min(5) Long id)
     {
         return ResponseEntity.status(HttpStatus.FOUND).body(productService.findById(id));
     }
 
     @GetMapping(value = "/getProductByName/{productName}")
-    public ResponseEntity<Product> getProductByName(@PathVariable String productName)
+    public ResponseEntity<Product> getProductByName(@PathVariable @NotBlank String productName)
     {
         return ResponseEntity.status(HttpStatus.FOUND).body(productService.getByName(productName));
     }

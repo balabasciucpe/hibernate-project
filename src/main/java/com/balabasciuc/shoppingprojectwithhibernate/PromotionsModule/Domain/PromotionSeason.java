@@ -16,6 +16,7 @@ public interface PromotionSeason {
 
     String isSeason();
 
-    double applySeasonPromotionDiscount(double initialPrice);
+     double applySeasonPromotionDiscount(double initialPrice, double procentageDiscount);
+
 
 }

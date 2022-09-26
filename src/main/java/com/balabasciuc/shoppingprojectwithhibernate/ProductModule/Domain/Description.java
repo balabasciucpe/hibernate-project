@@ -1,15 +1,17 @@
 package com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Embeddable
 public class Description {
 
-    @NotNull @Size(min = 5, max = 255, message = "Please provide a valid name!")
+    @NotEmpty
+    @Size(min = 5, max = 255, message = "Please provide a valid name!")
     private String descriptionName;
-    @NotNull @Size(min = 5, max = 100, message = "Please write a description!")
+    @NotEmpty @Size(min = 5, max = 100, message = "Please write a description!")
     private String descriptionAbout;
 
     protected Description() {}

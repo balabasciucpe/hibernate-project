@@ -1,11 +1,12 @@
 package com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.Domain;
 
 import com.balabasciuc.shoppingprojectwithhibernate.ProductModule.Domain.Product;
-import com.balabasciuc.shoppingprojectwithhibernate.StoreModule.Domain.Store;
-import org.hibernate.annotations.OnDeleteAction;
+import com.balabasciuc.shoppingprojectwithhibernate.PromotionsModule.PromotionUtility.PromotionConverter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +14,14 @@ import java.util.List;
 @org.hibernate.annotations.DynamicInsert
 @org.hibernate.annotations.DynamicUpdate
 @Access(AccessType.FIELD)
+//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Promotion {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) //pre Insert values
     private Long promotionId;
 
     @Column(name = "NUMBER_PRODUCTS_AT_PROMOTION", nullable = false)
+    @PositiveOrZero
     private int numberOfProductsAtPromotion;
 
     //Strategy Pattern, maybe State pattern was more suitable?
@@ -27,14 +30,15 @@ public class Promotion {
     @Column(name = "PROMOTION_SEASON", nullable = false)
     private PromotionSeason promotionSeason;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROMOTION_STORE_ID")
-    private Store promotionStore;
+   // @OneToOne(fetch = FetchType.LAZY)
+ //   @JoinColumn(name = "PROMOTION_STORE_ID")
+ //   private Store promotionStore;
 
+    //changes of mind
     //unidirectional
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
-    @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
+  //  @org.hibernate.annotations.OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "PROMOTION_PRODUCT_ID")
     private List<Product> productList = new ArrayList<>();
 
@@ -70,13 +74,13 @@ public class Promotion {
         this.promotionSeason = promotionSeason;
     }
 
-    public Store getPromotionStore() {
-        return promotionStore;
-    }
+ //   public Store getPromotionStore() {
+   //     return promotionStore;
+  //  }
 
-    public void setPromotionStore(Store promotionStore) {
-        this.promotionStore = promotionStore;
-    }
+  //  public void setPromotionStore(Store promotionStore) {
+   //     this.promotionStore = promotionStore;
+ //   }
 
     public List<Product> getProductList() {
         return productList;
